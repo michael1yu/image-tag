@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+    image-tag:
+        build: ./image-tag # set build context
+        ports:
+            - '8000:8000' # bind service to port 8000 on host
+        volumes:
+            - ./images:/media/image-tag/images # persist image files
+        env_file:
+            - ./image-tag/image-tag.env # configure image-tag postgres info
+        depends_on: # ensure necessary services are running first
+            - database
+    database:
+        image: 'postgres' # latest official postgres version
+        volumes:
+            - pg_data:/var/lib/postgresql/data/ # persist sql data
+        env_file:
+            - ./postgres/database.env # configure postgres
+volumes:
+    pg_data:
